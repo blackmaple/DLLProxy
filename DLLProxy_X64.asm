@@ -1,306 +1,335 @@
-format PE GUI 6.0 DLL
-
-
-include 'win32wx.inc'
+format PE64 GUI 6.0 DLL
+include 'win64wx.inc'
 
 macro LoadApi api,handle,name,address
 {
-    push name
-    push handle
-    call api   
-    mov dword [address],eax
+    mov rdx,name
+    mov rcx,handle
+    call api
+    mov qword [address],rax
 }
 
 align 16
 .code
 
-proc LoadOrigExports stdcall uses esi edi, hinstDLL 
-    local @dllName[MAX_PATH]:TCHAR
-    local @sysPath[MAX_PATH]:TCHAR
-    local @fullName[MAX_PATH]:TCHAR
-    
-    lea esi,[@dllName]
-    invoke GetModuleFileName,[hinstDLL],esi,MAX_PATH
-    invoke PathStripPath,esi
-    
-    lea edi,[@sysPath] 
-    invoke GetSystemDirectory,edi,MAX_PATH
-    invoke PathCombine,addr @fullName,edi,esi
-
-    invoke LoadLibrary,eax
-
-     
-    mov edi,eax
-    mov esi,[GetProcAddress]
-
-    LoadApi esi, edi,	api_CloseDriver                                     	,	addr_CloseDriver                                     
-    LoadApi esi, edi,	api_DefDriverProc                                   	,	addr_DefDriverProc                                   
-    LoadApi esi, edi,	api_DllCanUnloadNow                                 	,	addr_DllCanUnloadNow                                 
-    LoadApi esi, edi,	api_DllGetClassObject                               	,	addr_DllGetClassObject                               
-    LoadApi esi, edi,	api_DllRegisterServer                               	,	addr_DllRegisterServer                               
-    LoadApi esi, edi,	api_DllUnregisterServer                             	,	addr_DllUnregisterServer                             
-    LoadApi esi, edi,	api_DriverCallback                                  	,	addr_DriverCallback                                  
-    LoadApi esi, edi,	api_DrvClose                                        	,	addr_DrvClose                                        
-    LoadApi esi, edi,	api_DrvDefDriverProc                                	,	addr_DrvDefDriverProc                                
-    LoadApi esi, edi,	api_DrvGetModuleHandle                              	,	addr_DrvGetModuleHandle                              
-    LoadApi esi, edi,	api_DrvOpen                                         	,	addr_DrvOpen                                         
-    LoadApi esi, edi,	api_DrvOpenA                                        	,	addr_DrvOpenA                                        
-    LoadApi esi, edi,	api_DrvSendMessage                                  	,	addr_DrvSendMessage                                  
-    LoadApi esi, edi,	api_GetDriverFlags                                  	,	addr_GetDriverFlags                                  
-    LoadApi esi, edi,	api_GetDriverModuleHandle                           	,	addr_GetDriverModuleHandle                           
-    LoadApi esi, edi,	api_GetFileVersionInfoA                             	,	addr_GetFileVersionInfoA                             
-    LoadApi esi, edi,	api_GetFileVersionInfoExA                           	,	addr_GetFileVersionInfoExA                           
-    LoadApi esi, edi,	api_GetFileVersionInfoExW                           	,	addr_GetFileVersionInfoExW                           
-    LoadApi esi, edi,	api_GetFileVersionInfoSizeA                         	,	addr_GetFileVersionInfoSizeA                         
-    LoadApi esi, edi,	api_GetFileVersionInfoSizeExA                       	,	addr_GetFileVersionInfoSizeExA                       
-    LoadApi esi, edi,	api_GetFileVersionInfoSizeExW                       	,	addr_GetFileVersionInfoSizeExW                       
-    LoadApi esi, edi,	api_GetFileVersionInfoSizeW                         	,	addr_GetFileVersionInfoSizeW                         
-    LoadApi esi, edi,	api_GetFileVersionInfoW                             	,	addr_GetFileVersionInfoW                             
-    LoadApi esi, edi,	api_OpenDriver                                      	,	addr_OpenDriver                                      
-    LoadApi esi, edi,	api_OpenDriverA                                     	,	addr_OpenDriverA                                     
-    LoadApi esi, edi,	api_PlaySound                                       	,	addr_PlaySound                                       
-    LoadApi esi, edi,	api_PlaySoundA                                      	,	addr_PlaySoundA                                      
-    LoadApi esi, edi,	api_PlaySoundW                                      	,	addr_PlaySoundW                                      
-    LoadApi esi, edi,	api_SendDriverMessage                               	,	addr_SendDriverMessage                               
-    LoadApi esi, edi,	api_VerFindFileA                                    	,	addr_VerFindFileA                                    
-    LoadApi esi, edi,	api_VerFindFileW                                    	,	addr_VerFindFileW                                    
-    LoadApi esi, edi,	api_VerInstallFileA                                 	,	addr_VerInstallFileA                                 
-    LoadApi esi, edi,	api_VerInstallFileW                                 	,	addr_VerInstallFileW                                 
-    LoadApi esi, edi,	api_VerLanguageNameA                                	,	addr_VerLanguageNameA                                
-    LoadApi esi, edi,	api_VerLanguageNameW                                	,	addr_VerLanguageNameW                                
-    LoadApi esi, edi,	api_VerQueryValueA                                  	,	addr_VerQueryValueA                                  
-    LoadApi esi, edi,	api_VerQueryValueW                                  	,	addr_VerQueryValueW                                  
-    LoadApi esi, edi,	api_WinHttpAddRequestHeaders                        	,	addr_WinHttpAddRequestHeaders                        
-    LoadApi esi, edi,	api_WinHttpCheckPlatform                            	,	addr_WinHttpCheckPlatform                            
-    LoadApi esi, edi,	api_WinHttpCloseHandle                              	,	addr_WinHttpCloseHandle                              
-    LoadApi esi, edi,	api_WinHttpConnect                                  	,	addr_WinHttpConnect                                  
-    LoadApi esi, edi,	api_WinHttpCrackUrl                                 	,	addr_WinHttpCrackUrl                                 
-    LoadApi esi, edi,	api_WinHttpCreateProxyResolver                      	,	addr_WinHttpCreateProxyResolver                      
-    LoadApi esi, edi,	api_WinHttpCreateUrl                                	,	addr_WinHttpCreateUrl                                
-    LoadApi esi, edi,	api_WinHttpDetectAutoProxyConfigUrl                 	,	addr_WinHttpDetectAutoProxyConfigUrl                 
-    LoadApi esi, edi,	api_WinHttpFreeProxyResult                          	,	addr_WinHttpFreeProxyResult                          
-    LoadApi esi, edi,	api_WinHttpFreeProxyResultEx                        	,	addr_WinHttpFreeProxyResultEx                        
-    LoadApi esi, edi,	api_WinHttpFreeProxySettings                        	,	addr_WinHttpFreeProxySettings                        
-    LoadApi esi, edi,	api_WinHttpGetDefaultProxyConfiguration             	,	addr_WinHttpGetDefaultProxyConfiguration             
-    LoadApi esi, edi,	api_WinHttpGetIEProxyConfigForCurrentUser           	,	addr_WinHttpGetIEProxyConfigForCurrentUser           
-    LoadApi esi, edi,	api_WinHttpGetProxyForUrl                           	,	addr_WinHttpGetProxyForUrl                           
-    LoadApi esi, edi,	api_WinHttpGetProxyForUrlEx                         	,	addr_WinHttpGetProxyForUrlEx                         
-    LoadApi esi, edi,	api_WinHttpGetProxyForUrlEx2                        	,	addr_WinHttpGetProxyForUrlEx2                        
-    LoadApi esi, edi,	api_WinHttpGetProxyResult                           	,	addr_WinHttpGetProxyResult                           
-    LoadApi esi, edi,	api_WinHttpGetProxyResultEx                         	,	addr_WinHttpGetProxyResultEx                         
-    LoadApi esi, edi,	api_WinHttpGetProxySettingsVersion                  	,	addr_WinHttpGetProxySettingsVersion                  
-    LoadApi esi, edi,	api_WinHttpOpen                                     	,	addr_WinHttpOpen                                     
-    LoadApi esi, edi,	api_WinHttpOpenRequest                              	,	addr_WinHttpOpenRequest                              
-    LoadApi esi, edi,	api_WinHttpQueryAuthSchemes                         	,	addr_WinHttpQueryAuthSchemes                         
-    LoadApi esi, edi,	api_WinHttpQueryDataAvailable                       	,	addr_WinHttpQueryDataAvailable                       
-    LoadApi esi, edi,	api_WinHttpQueryHeaders                             	,	addr_WinHttpQueryHeaders                             
-    LoadApi esi, edi,	api_WinHttpQueryOption                              	,	addr_WinHttpQueryOption                              
-    LoadApi esi, edi,	api_WinHttpReadData                                 	,	addr_WinHttpReadData                                 
-    LoadApi esi, edi,	api_WinHttpReadProxySettings                        	,	addr_WinHttpReadProxySettings                        
-    LoadApi esi, edi,	api_WinHttpReceiveResponse                          	,	addr_WinHttpReceiveResponse                          
-    LoadApi esi, edi,	api_WinHttpResetAutoProxy                           	,	addr_WinHttpResetAutoProxy                           
-    LoadApi esi, edi,	api_WinHttpSendRequest                              	,	addr_WinHttpSendRequest                              
-    LoadApi esi, edi,	api_WinHttpSetCredentials                           	,	addr_WinHttpSetCredentials                           
-    LoadApi esi, edi,	api_WinHttpSetDefaultProxyConfiguration             	,	addr_WinHttpSetDefaultProxyConfiguration             
-    LoadApi esi, edi,	api_WinHttpSetOption                                	,	addr_WinHttpSetOption                                
-    LoadApi esi, edi,	api_WinHttpSetStatusCallback                        	,	addr_WinHttpSetStatusCallback                        
-    LoadApi esi, edi,	api_WinHttpSetTimeouts                              	,	addr_WinHttpSetTimeouts                              
-    LoadApi esi, edi,	api_WinHttpTimeFromSystemTime                       	,	addr_WinHttpTimeFromSystemTime                       
-    LoadApi esi, edi,	api_WinHttpTimeToSystemTime                         	,	addr_WinHttpTimeToSystemTime                         
-    LoadApi esi, edi,	api_WinHttpWebSocketClose                           	,	addr_WinHttpWebSocketClose                           
-    LoadApi esi, edi,	api_WinHttpWebSocketCompleteUpgrade                 	,	addr_WinHttpWebSocketCompleteUpgrade                 
-    LoadApi esi, edi,	api_WinHttpWebSocketQueryCloseStatus                	,	addr_WinHttpWebSocketQueryCloseStatus                
-    LoadApi esi, edi,	api_WinHttpWebSocketReceive                         	,	addr_WinHttpWebSocketReceive                         
-    LoadApi esi, edi,	api_WinHttpWebSocketSend                            	,	addr_WinHttpWebSocketSend                            
-    LoadApi esi, edi,	api_WinHttpWebSocketShutdown                        	,	addr_WinHttpWebSocketShutdown                        
-    LoadApi esi, edi,	api_WinHttpWriteData                                	,	addr_WinHttpWriteData                                
-    LoadApi esi, edi,	api_WinHttpWriteProxySettings                       	,	addr_WinHttpWriteProxySettings                       
-    LoadApi esi, edi,	api_auxGetDevCapsA                                  	,	addr_auxGetDevCapsA                                  
-    LoadApi esi, edi,	api_auxGetDevCapsW                                  	,	addr_auxGetDevCapsW                                  
-    LoadApi esi, edi,	api_auxGetNumDevs                                   	,	addr_auxGetNumDevs                                   
-    LoadApi esi, edi,	api_auxGetVolume                                    	,	addr_auxGetVolume                                    
-    LoadApi esi, edi,	api_auxOutMessage                                   	,	addr_auxOutMessage                                   
-    LoadApi esi, edi,	api_auxSetVolume                                    	,	addr_auxSetVolume                                    
-    LoadApi esi, edi,	api_joyConfigChanged                                	,	addr_joyConfigChanged                                
-    LoadApi esi, edi,	api_joyGetDevCapsA                                  	,	addr_joyGetDevCapsA                                  
-    LoadApi esi, edi,	api_joyGetDevCapsW                                  	,	addr_joyGetDevCapsW                                  
-    LoadApi esi, edi,	api_joyGetNumDevs                                   	,	addr_joyGetNumDevs                                   
-    LoadApi esi, edi,	api_joyGetPos                                       	,	addr_joyGetPos                                       
-    LoadApi esi, edi,	api_joyGetPosEx                                     	,	addr_joyGetPosEx                                     
-    LoadApi esi, edi,	api_joyGetThreshold                                 	,	addr_joyGetThreshold                                 
-    LoadApi esi, edi,	api_joyReleaseCapture                               	,	addr_joyReleaseCapture                               
-    LoadApi esi, edi,	api_joySetCapture                                   	,	addr_joySetCapture                                   
-    LoadApi esi, edi,	api_joySetThreshold                                 	,	addr_joySetThreshold                                 
-    LoadApi esi, edi,	api_mciDriverNotify                                 	,	addr_mciDriverNotify                                 
-    LoadApi esi, edi,	api_mciDriverYield                                  	,	addr_mciDriverYield                                  
-    LoadApi esi, edi,	api_mciExecute                                      	,	addr_mciExecute                                      
-    LoadApi esi, edi,	api_mciFreeCommandResource                          	,	addr_mciFreeCommandResource                          
-    LoadApi esi, edi,	api_mciGetCreatorTask                               	,	addr_mciGetCreatorTask                               
-    LoadApi esi, edi,	api_mciGetDeviceIDA                                 	,	addr_mciGetDeviceIDA                                 
-    LoadApi esi, edi,	api_mciGetDeviceIDFromElementIDA                    	,	addr_mciGetDeviceIDFromElementIDA                    
-    LoadApi esi, edi,	api_mciGetDeviceIDFromElementIDW                    	,	addr_mciGetDeviceIDFromElementIDW                    
-    LoadApi esi, edi,	api_mciGetDeviceIDW                                 	,	addr_mciGetDeviceIDW                                 
-    LoadApi esi, edi,	api_mciGetDriverData                                	,	addr_mciGetDriverData                                
-    LoadApi esi, edi,	api_mciGetErrorStringA                              	,	addr_mciGetErrorStringA                              
-    LoadApi esi, edi,	api_mciGetErrorStringW                              	,	addr_mciGetErrorStringW                              
-    LoadApi esi, edi,	api_mciGetYieldProc                                 	,	addr_mciGetYieldProc                                 
-    LoadApi esi, edi,	api_mciLoadCommandResource                          	,	addr_mciLoadCommandResource                          
-    LoadApi esi, edi,	api_mciSendCommandA                                 	,	addr_mciSendCommandA                                 
-    LoadApi esi, edi,	api_mciSendCommandW                                 	,	addr_mciSendCommandW                                 
-    LoadApi esi, edi,	api_mciSendStringA                                  	,	addr_mciSendStringA                                  
-    LoadApi esi, edi,	api_mciSendStringW                                  	,	addr_mciSendStringW                                  
-    LoadApi esi, edi,	api_mciSetDriverData                                	,	addr_mciSetDriverData                                
-    LoadApi esi, edi,	api_mciSetYieldProc                                 	,	addr_mciSetYieldProc                                 
-    LoadApi esi, edi,	api_midiConnect                                     	,	addr_midiConnect                                     
-    LoadApi esi, edi,	api_midiDisconnect                                  	,	addr_midiDisconnect                                  
-    LoadApi esi, edi,	api_midiInAddBuffer                                 	,	addr_midiInAddBuffer                                 
-    LoadApi esi, edi,	api_midiInClose                                     	,	addr_midiInClose                                     
-    LoadApi esi, edi,	api_midiInGetDevCapsA                               	,	addr_midiInGetDevCapsA                               
-    LoadApi esi, edi,	api_midiInGetDevCapsW                               	,	addr_midiInGetDevCapsW                               
-    LoadApi esi, edi,	api_midiInGetErrorTextA                             	,	addr_midiInGetErrorTextA                             
-    LoadApi esi, edi,	api_midiInGetErrorTextW                             	,	addr_midiInGetErrorTextW                             
-    LoadApi esi, edi,	api_midiInGetID                                     	,	addr_midiInGetID                                     
-    LoadApi esi, edi,	api_midiInGetNumDevs                                	,	addr_midiInGetNumDevs                                
-    LoadApi esi, edi,	api_midiInMessage                                   	,	addr_midiInMessage                                   
-    LoadApi esi, edi,	api_midiInOpen                                      	,	addr_midiInOpen                                      
-    LoadApi esi, edi,	api_midiInPrepareHeader                             	,	addr_midiInPrepareHeader                             
-    LoadApi esi, edi,	api_midiInReset                                     	,	addr_midiInReset                                     
-    LoadApi esi, edi,	api_midiInStart                                     	,	addr_midiInStart                                     
-    LoadApi esi, edi,	api_midiInStop                                      	,	addr_midiInStop                                      
-    LoadApi esi, edi,	api_midiInUnprepareHeader                           	,	addr_midiInUnprepareHeader                           
-    LoadApi esi, edi,	api_midiOutCacheDrumPatches                         	,	addr_midiOutCacheDrumPatches                         
-    LoadApi esi, edi,	api_midiOutCachePatches                             	,	addr_midiOutCachePatches                             
-    LoadApi esi, edi,	api_midiOutClose                                    	,	addr_midiOutClose                                    
-    LoadApi esi, edi,	api_midiOutGetDevCapsA                              	,	addr_midiOutGetDevCapsA                              
-    LoadApi esi, edi,	api_midiOutGetDevCapsW                              	,	addr_midiOutGetDevCapsW                              
-    LoadApi esi, edi,	api_midiOutGetErrorTextA                            	,	addr_midiOutGetErrorTextA                            
-    LoadApi esi, edi,	api_midiOutGetErrorTextW                            	,	addr_midiOutGetErrorTextW                            
-    LoadApi esi, edi,	api_midiOutGetID                                    	,	addr_midiOutGetID                                    
-    LoadApi esi, edi,	api_midiOutGetNumDevs                               	,	addr_midiOutGetNumDevs                               
-    LoadApi esi, edi,	api_midiOutGetVolume                                	,	addr_midiOutGetVolume                                
-    LoadApi esi, edi,	api_midiOutLongMsg                                  	,	addr_midiOutLongMsg                                  
-    LoadApi esi, edi,	api_midiOutMessage                                  	,	addr_midiOutMessage                                  
-    LoadApi esi, edi,	api_midiOutOpen                                     	,	addr_midiOutOpen                                     
-    LoadApi esi, edi,	api_midiOutPrepareHeader                            	,	addr_midiOutPrepareHeader                            
-    LoadApi esi, edi,	api_midiOutReset                                    	,	addr_midiOutReset                                    
-    LoadApi esi, edi,	api_midiOutSetVolume                                	,	addr_midiOutSetVolume                                
-    LoadApi esi, edi,	api_midiOutShortMsg                                 	,	addr_midiOutShortMsg                                 
-    LoadApi esi, edi,	api_midiOutUnprepareHeader                          	,	addr_midiOutUnprepareHeader                          
-    LoadApi esi, edi,	api_midiStreamClose                                 	,	addr_midiStreamClose                                 
-    LoadApi esi, edi,	api_midiStreamOpen                                  	,	addr_midiStreamOpen                                  
-    LoadApi esi, edi,	api_midiStreamOut                                   	,	addr_midiStreamOut                                   
-    LoadApi esi, edi,	api_midiStreamPause                                 	,	addr_midiStreamPause                                 
-    LoadApi esi, edi,	api_midiStreamPosition                              	,	addr_midiStreamPosition                              
-    LoadApi esi, edi,	api_midiStreamProperty                              	,	addr_midiStreamProperty                              
-    LoadApi esi, edi,	api_midiStreamRestart                               	,	addr_midiStreamRestart                               
-    LoadApi esi, edi,	api_midiStreamStop                                  	,	addr_midiStreamStop                                  
-    LoadApi esi, edi,	api_mixerClose                                      	,	addr_mixerClose                                      
-    LoadApi esi, edi,	api_mixerGetControlDetailsA                         	,	addr_mixerGetControlDetailsA                         
-    LoadApi esi, edi,	api_mixerGetControlDetailsW                         	,	addr_mixerGetControlDetailsW                         
-    LoadApi esi, edi,	api_mixerGetDevCapsA                                	,	addr_mixerGetDevCapsA                                
-    LoadApi esi, edi,	api_mixerGetDevCapsW                                	,	addr_mixerGetDevCapsW                                
-    LoadApi esi, edi,	api_mixerGetID                                      	,	addr_mixerGetID                                      
-    LoadApi esi, edi,	api_mixerGetLineControlsA                           	,	addr_mixerGetLineControlsA                           
-    LoadApi esi, edi,	api_mixerGetLineControlsW                           	,	addr_mixerGetLineControlsW                           
-    LoadApi esi, edi,	api_mixerGetLineInfoA                               	,	addr_mixerGetLineInfoA                               
-    LoadApi esi, edi,	api_mixerGetLineInfoW                               	,	addr_mixerGetLineInfoW                               
-    LoadApi esi, edi,	api_mixerGetNumDevs                                 	,	addr_mixerGetNumDevs                                 
-    LoadApi esi, edi,	api_mixerMessage                                    	,	addr_mixerMessage                                    
-    LoadApi esi, edi,	api_mixerOpen                                       	,	addr_mixerOpen                                       
-    LoadApi esi, edi,	api_mixerSetControlDetails                          	,	addr_mixerSetControlDetails                          
-    LoadApi esi, edi,	api_mmGetCurrentTask                                	,	addr_mmGetCurrentTask                                
-    LoadApi esi, edi,	api_mmTaskBlock                                     	,	addr_mmTaskBlock                                     
-    LoadApi esi, edi,	api_mmTaskCreate                                    	,	addr_mmTaskCreate                                    
-    LoadApi esi, edi,	api_mmTaskSignal                                    	,	addr_mmTaskSignal                                    
-    LoadApi esi, edi,	api_mmTaskYield                                     	,	addr_mmTaskYield                                     
-    LoadApi esi, edi,	api_mmioAdvance                                     	,	addr_mmioAdvance                                     
-    LoadApi esi, edi,	api_mmioAscend                                      	,	addr_mmioAscend                                      
-    LoadApi esi, edi,	api_mmioClose                                       	,	addr_mmioClose                                       
-    LoadApi esi, edi,	api_mmioCreateChunk                                 	,	addr_mmioCreateChunk                                 
-    LoadApi esi, edi,	api_mmioDescend                                     	,	addr_mmioDescend                                     
-    LoadApi esi, edi,	api_mmioFlush                                       	,	addr_mmioFlush                                       
-    LoadApi esi, edi,	api_mmioGetInfo                                     	,	addr_mmioGetInfo                                     
-    LoadApi esi, edi,	api_mmioInstallIOProc16                             	,	addr_mmioInstallIOProc16                             
-    LoadApi esi, edi,	api_mmioInstallIOProcA                              	,	addr_mmioInstallIOProcA                              
-    LoadApi esi, edi,	api_mmioInstallIOProcW                              	,	addr_mmioInstallIOProcW                              
-    LoadApi esi, edi,	api_mmioOpenA                                       	,	addr_mmioOpenA                                       
-    LoadApi esi, edi,	api_mmioOpenW                                       	,	addr_mmioOpenW                                       
-    LoadApi esi, edi,	api_mmioRead                                        	,	addr_mmioRead                                        
-    LoadApi esi, edi,	api_mmioRenameA                                     	,	addr_mmioRenameA                                     
-    LoadApi esi, edi,	api_mmioRenameW                                     	,	addr_mmioRenameW                                     
-    LoadApi esi, edi,	api_mmioSeek                                        	,	addr_mmioSeek                                        
-    LoadApi esi, edi,	api_mmioSendMessage                                 	,	addr_mmioSendMessage                                 
-    LoadApi esi, edi,	api_mmioSetBuffer                                   	,	addr_mmioSetBuffer                                   
-    LoadApi esi, edi,	api_mmioSetInfo                                     	,	addr_mmioSetInfo                                     
-    LoadApi esi, edi,	api_mmioStringToFOURCCA                             	,	addr_mmioStringToFOURCCA                             
-    LoadApi esi, edi,	api_mmioStringToFOURCCW                             	,	addr_mmioStringToFOURCCW                             
-    LoadApi esi, edi,	api_mmioWrite                                       	,	addr_mmioWrite                                       
-    LoadApi esi, edi,	api_mmsystemGetVersion                              	,	addr_mmsystemGetVersion                              
-    LoadApi esi, edi,	api_sndPlaySoundA                                   	,	addr_sndPlaySoundA                                   
-    LoadApi esi, edi,	api_sndPlaySoundW                                   	,	addr_sndPlaySoundW                                   
-    LoadApi esi, edi,	api_timeBeginPeriod                                 	,	addr_timeBeginPeriod                                 
-    LoadApi esi, edi,	api_timeEndPeriod                                   	,	addr_timeEndPeriod                                   
-    LoadApi esi, edi,	api_timeGetDevCaps                                  	,	addr_timeGetDevCaps                                  
-    LoadApi esi, edi,	api_timeGetSystemTime                               	,	addr_timeGetSystemTime                               
-    LoadApi esi, edi,	api_timeGetTime                                     	,	addr_timeGetTime                                     
-    LoadApi esi, edi,	api_timeKillEvent                                   	,	addr_timeKillEvent                                   
-    LoadApi esi, edi,	api_timeSetEvent                                    	,	addr_timeSetEvent                                    
-    LoadApi esi, edi,	api_waveInAddBuffer                                 	,	addr_waveInAddBuffer                                 
-    LoadApi esi, edi,	api_waveInClose                                     	,	addr_waveInClose                                     
-    LoadApi esi, edi,	api_waveInGetDevCapsA                               	,	addr_waveInGetDevCapsA                               
-    LoadApi esi, edi,	api_waveInGetDevCapsW                               	,	addr_waveInGetDevCapsW                               
-    LoadApi esi, edi,	api_waveInGetErrorTextA                             	,	addr_waveInGetErrorTextA                             
-    LoadApi esi, edi,	api_waveInGetErrorTextW                             	,	addr_waveInGetErrorTextW                             
-    LoadApi esi, edi,	api_waveInGetID                                     	,	addr_waveInGetID                                     
-    LoadApi esi, edi,	api_waveInGetNumDevs                                	,	addr_waveInGetNumDevs                                
-    LoadApi esi, edi,	api_waveInGetPosition                               	,	addr_waveInGetPosition                               
-    LoadApi esi, edi,	api_waveInMessage                                   	,	addr_waveInMessage                                   
-    LoadApi esi, edi,	api_waveInOpen                                      	,	addr_waveInOpen                                      
-    LoadApi esi, edi,	api_waveInPrepareHeader                             	,	addr_waveInPrepareHeader                             
-    LoadApi esi, edi,	api_waveInReset                                     	,	addr_waveInReset                                     
-    LoadApi esi, edi,	api_waveInStart                                     	,	addr_waveInStart                                     
-    LoadApi esi, edi,	api_waveInStop                                      	,	addr_waveInStop                                      
-    LoadApi esi, edi,	api_waveInUnprepareHeader                           	,	addr_waveInUnprepareHeader                           
-    LoadApi esi, edi,	api_waveOutBreakLoop                                	,	addr_waveOutBreakLoop                                
-    LoadApi esi, edi,	api_waveOutClose                                    	,	addr_waveOutClose                                    
-    LoadApi esi, edi,	api_waveOutGetDevCapsA                              	,	addr_waveOutGetDevCapsA                              
-    LoadApi esi, edi,	api_waveOutGetDevCapsW                              	,	addr_waveOutGetDevCapsW                              
-    LoadApi esi, edi,	api_waveOutGetErrorTextA                            	,	addr_waveOutGetErrorTextA                            
-    LoadApi esi, edi,	api_waveOutGetErrorTextW                            	,	addr_waveOutGetErrorTextW                            
-    LoadApi esi, edi,	api_waveOutGetID                                    	,	addr_waveOutGetID                                    
-    LoadApi esi, edi,	api_waveOutGetNumDevs                               	,	addr_waveOutGetNumDevs                               
-    LoadApi esi, edi,	api_waveOutGetPitch                                 	,	addr_waveOutGetPitch                                 
-    LoadApi esi, edi,	api_waveOutGetPlaybackRate                          	,	addr_waveOutGetPlaybackRate                          
-    LoadApi esi, edi,	api_waveOutGetPosition                              	,	addr_waveOutGetPosition                              
-    LoadApi esi, edi,	api_waveOutGetVolume                                	,	addr_waveOutGetVolume                                
-    LoadApi esi, edi,	api_waveOutMessage                                  	,	addr_waveOutMessage                                  
-    LoadApi esi, edi,	api_waveOutOpen                                     	,	addr_waveOutOpen                                     
-    LoadApi esi, edi,	api_waveOutPause                                    	,	addr_waveOutPause                                    
-    LoadApi esi, edi,	api_waveOutPrepareHeader                            	,	addr_waveOutPrepareHeader                            
-    LoadApi esi, edi,	api_waveOutReset                                    	,	addr_waveOutReset                                    
-    LoadApi esi, edi,	api_waveOutRestart                                  	,	addr_waveOutRestart                                  
-    LoadApi esi, edi,	api_waveOutSetPitch                                 	,	addr_waveOutSetPitch                                 
-    LoadApi esi, edi,	api_waveOutSetPlaybackRate                          	,	addr_waveOutSetPlaybackRate                          
-    LoadApi esi, edi,	api_waveOutSetVolume                                	,	addr_waveOutSetVolume                                
-    LoadApi esi, edi,	api_waveOutUnprepareHeader                          	,	addr_waveOutUnprepareHeader                          
-    LoadApi esi, edi,	api_waveOutWrite                                    	,	addr_waveOutWrite                                    
-
-    xor eax,eax
-    ret
-endp
-
- 
 
 align 16
-proc DllEntryPoint hinstDLL, reason, reserved
-    .if [reason]=1
-        push [hinstDLL]
-        call LoadOrigExports
-        invoke LoadLibrary,dll_Maple
-    .endif
-    mov	eax,TRUE
+LoadOrigExports:
+    
+    push rsi
+    push rdi
+    sub rsp,0x28
+    
+    lea rsi,qword[addr_DLLNAME]
+    lea rdi,qword[addr_SYSPATH]
+
+    
+    mov r8,MAX_PATH
+    mov rdx,rsi
+    call [GetModuleFileName]
+    
+    mov rcx,rsi
+    call [PathStripPath]
+    
+    mov rdx,MAX_PATH
+    mov rcx,rdi
+    call [GetSystemDirectory]
+    
+    mov r8,rsi
+    mov rdx,rdi
+    lea rcx,qword[addr_FULLNAME]
+    call [PathCombine]
+    
+    mov rcx,rax
+    call [LoadLibrary]
+    
+    mov rdi,rax
+    mov rsi,[GetProcAddress]
+    
+
+
+ 
+        
+        LoadApi rsi,  rdi,     api_CloseDriver                                     	,	addr_CloseDriver                                     
+        LoadApi rsi,  rdi,     api_DefDriverProc                                   	,	addr_DefDriverProc                                   
+        LoadApi rsi,  rdi,     api_DllCanUnloadNow                                 	,	addr_DllCanUnloadNow                                 
+        LoadApi rsi,  rdi,     api_DllGetClassObject                               	,	addr_DllGetClassObject                               
+        LoadApi rsi,  rdi,     api_DllRegisterServer                               	,	addr_DllRegisterServer                               
+        LoadApi rsi,  rdi,     api_DllUnregisterServer                             	,	addr_DllUnregisterServer                             
+        LoadApi rsi,  rdi,     api_DriverCallback                                  	,	addr_DriverCallback                                  
+        LoadApi rsi,  rdi,     api_DrvClose                                        	,	addr_DrvClose                                        
+        LoadApi rsi,  rdi,     api_DrvDefDriverProc                                	,	addr_DrvDefDriverProc                                
+        LoadApi rsi,  rdi,     api_DrvGetModuleHandle                              	,	addr_DrvGetModuleHandle                              
+        LoadApi rsi,  rdi,     api_DrvOpen                                         	,	addr_DrvOpen                                         
+        LoadApi rsi,  rdi,     api_DrvOpenA                                        	,	addr_DrvOpenA                                        
+        LoadApi rsi,  rdi,     api_DrvSendMessage                                  	,	addr_DrvSendMessage                                  
+        LoadApi rsi,  rdi,     api_GetDriverFlags                                  	,	addr_GetDriverFlags                                  
+        LoadApi rsi,  rdi,     api_GetDriverModuleHandle                           	,	addr_GetDriverModuleHandle                           
+        LoadApi rsi,  rdi,     api_GetFileVersionInfoA                             	,	addr_GetFileVersionInfoA                             
+        LoadApi rsi,  rdi,     api_GetFileVersionInfoExA                           	,	addr_GetFileVersionInfoExA                           
+        LoadApi rsi,  rdi,     api_GetFileVersionInfoExW                           	,	addr_GetFileVersionInfoExW                           
+        LoadApi rsi,  rdi,     api_GetFileVersionInfoSizeA                         	,	addr_GetFileVersionInfoSizeA                         
+        LoadApi rsi,  rdi,     api_GetFileVersionInfoSizeExA                       	,	addr_GetFileVersionInfoSizeExA                       
+        LoadApi rsi,  rdi,     api_GetFileVersionInfoSizeExW                       	,	addr_GetFileVersionInfoSizeExW                       
+        LoadApi rsi,  rdi,     api_GetFileVersionInfoSizeW                         	,	addr_GetFileVersionInfoSizeW                         
+        LoadApi rsi,  rdi,     api_GetFileVersionInfoW                             	,	addr_GetFileVersionInfoW                             
+        LoadApi rsi,  rdi,     api_OpenDriver                                      	,	addr_OpenDriver                                      
+        LoadApi rsi,  rdi,     api_OpenDriverA                                     	,	addr_OpenDriverA                                     
+        LoadApi rsi,  rdi,     api_PlaySound                                       	,	addr_PlaySound                                       
+        LoadApi rsi,  rdi,     api_PlaySoundA                                      	,	addr_PlaySoundA                                      
+        LoadApi rsi,  rdi,     api_PlaySoundW                                      	,	addr_PlaySoundW                                      
+        LoadApi rsi,  rdi,     api_SendDriverMessage                               	,	addr_SendDriverMessage                               
+        LoadApi rsi,  rdi,     api_VerFindFileA                                    	,	addr_VerFindFileA                                    
+        LoadApi rsi,  rdi,     api_VerFindFileW                                    	,	addr_VerFindFileW                                    
+        LoadApi rsi,  rdi,     api_VerInstallFileA                                 	,	addr_VerInstallFileA                                 
+        LoadApi rsi,  rdi,     api_VerInstallFileW                                 	,	addr_VerInstallFileW                                 
+        LoadApi rsi,  rdi,     api_VerLanguageNameA                                	,	addr_VerLanguageNameA                                
+        LoadApi rsi,  rdi,     api_VerLanguageNameW                                	,	addr_VerLanguageNameW                                
+        LoadApi rsi,  rdi,     api_VerQueryValueA                                  	,	addr_VerQueryValueA                                  
+        LoadApi rsi,  rdi,     api_VerQueryValueW                                  	,	addr_VerQueryValueW                                  
+        LoadApi rsi,  rdi,     api_WinHttpAddRequestHeaders                        	,	addr_WinHttpAddRequestHeaders                        
+        LoadApi rsi,  rdi,     api_WinHttpCheckPlatform                            	,	addr_WinHttpCheckPlatform                            
+        LoadApi rsi,  rdi,     api_WinHttpCloseHandle                              	,	addr_WinHttpCloseHandle                              
+        LoadApi rsi,  rdi,     api_WinHttpConnect                                  	,	addr_WinHttpConnect                                  
+        LoadApi rsi,  rdi,     api_WinHttpCrackUrl                                 	,	addr_WinHttpCrackUrl                                 
+        LoadApi rsi,  rdi,     api_WinHttpCreateProxyResolver                      	,	addr_WinHttpCreateProxyResolver                      
+        LoadApi rsi,  rdi,     api_WinHttpCreateUrl                                	,	addr_WinHttpCreateUrl                                
+        LoadApi rsi,  rdi,     api_WinHttpDetectAutoProxyConfigUrl                 	,	addr_WinHttpDetectAutoProxyConfigUrl                 
+        LoadApi rsi,  rdi,     api_WinHttpFreeProxyResult                          	,	addr_WinHttpFreeProxyResult                          
+        LoadApi rsi,  rdi,     api_WinHttpFreeProxyResultEx                        	,	addr_WinHttpFreeProxyResultEx                        
+        LoadApi rsi,  rdi,     api_WinHttpFreeProxySettings                        	,	addr_WinHttpFreeProxySettings                        
+        LoadApi rsi,  rdi,     api_WinHttpGetDefaultProxyConfiguration             	,	addr_WinHttpGetDefaultProxyConfiguration             
+        LoadApi rsi,  rdi,     api_WinHttpGetIEProxyConfigForCurrentUser           	,	addr_WinHttpGetIEProxyConfigForCurrentUser           
+        LoadApi rsi,  rdi,     api_WinHttpGetProxyForUrl                           	,	addr_WinHttpGetProxyForUrl                           
+        LoadApi rsi,  rdi,     api_WinHttpGetProxyForUrlEx                         	,	addr_WinHttpGetProxyForUrlEx                         
+        LoadApi rsi,  rdi,     api_WinHttpGetProxyForUrlEx2                        	,	addr_WinHttpGetProxyForUrlEx2                        
+        LoadApi rsi,  rdi,     api_WinHttpGetProxyResult                           	,	addr_WinHttpGetProxyResult                           
+        LoadApi rsi,  rdi,     api_WinHttpGetProxyResultEx                         	,	addr_WinHttpGetProxyResultEx                         
+        LoadApi rsi,  rdi,     api_WinHttpGetProxySettingsVersion                  	,	addr_WinHttpGetProxySettingsVersion                  
+        LoadApi rsi,  rdi,     api_WinHttpOpen                                     	,	addr_WinHttpOpen                                     
+        LoadApi rsi,  rdi,     api_WinHttpOpenRequest                              	,	addr_WinHttpOpenRequest                              
+        LoadApi rsi,  rdi,     api_WinHttpQueryAuthSchemes                         	,	addr_WinHttpQueryAuthSchemes                         
+        LoadApi rsi,  rdi,     api_WinHttpQueryDataAvailable                       	,	addr_WinHttpQueryDataAvailable                       
+        LoadApi rsi,  rdi,     api_WinHttpQueryHeaders                             	,	addr_WinHttpQueryHeaders                             
+        LoadApi rsi,  rdi,     api_WinHttpQueryOption                              	,	addr_WinHttpQueryOption                              
+        LoadApi rsi,  rdi,     api_WinHttpReadData                                 	,	addr_WinHttpReadData                                 
+        LoadApi rsi,  rdi,     api_WinHttpReadProxySettings                        	,	addr_WinHttpReadProxySettings                        
+        LoadApi rsi,  rdi,     api_WinHttpReceiveResponse                          	,	addr_WinHttpReceiveResponse                          
+        LoadApi rsi,  rdi,     api_WinHttpResetAutoProxy                           	,	addr_WinHttpResetAutoProxy                           
+        LoadApi rsi,  rdi,     api_WinHttpSendRequest                              	,	addr_WinHttpSendRequest                              
+        LoadApi rsi,  rdi,     api_WinHttpSetCredentials                           	,	addr_WinHttpSetCredentials                           
+        LoadApi rsi,  rdi,     api_WinHttpSetDefaultProxyConfiguration             	,	addr_WinHttpSetDefaultProxyConfiguration             
+        LoadApi rsi,  rdi,     api_WinHttpSetOption                                	,	addr_WinHttpSetOption                                
+        LoadApi rsi,  rdi,     api_WinHttpSetStatusCallback                        	,	addr_WinHttpSetStatusCallback                        
+        LoadApi rsi,  rdi,     api_WinHttpSetTimeouts                              	,	addr_WinHttpSetTimeouts                              
+        LoadApi rsi,  rdi,     api_WinHttpTimeFromSystemTime                       	,	addr_WinHttpTimeFromSystemTime                       
+        LoadApi rsi,  rdi,     api_WinHttpTimeToSystemTime                         	,	addr_WinHttpTimeToSystemTime                         
+        LoadApi rsi,  rdi,     api_WinHttpWebSocketClose                           	,	addr_WinHttpWebSocketClose                           
+        LoadApi rsi,  rdi,     api_WinHttpWebSocketCompleteUpgrade                 	,	addr_WinHttpWebSocketCompleteUpgrade                 
+        LoadApi rsi,  rdi,     api_WinHttpWebSocketQueryCloseStatus                	,	addr_WinHttpWebSocketQueryCloseStatus                
+        LoadApi rsi,  rdi,     api_WinHttpWebSocketReceive                         	,	addr_WinHttpWebSocketReceive                         
+        LoadApi rsi,  rdi,     api_WinHttpWebSocketSend                            	,	addr_WinHttpWebSocketSend                            
+        LoadApi rsi,  rdi,     api_WinHttpWebSocketShutdown                        	,	addr_WinHttpWebSocketShutdown                        
+        LoadApi rsi,  rdi,     api_WinHttpWriteData                                	,	addr_WinHttpWriteData                                
+        LoadApi rsi,  rdi,     api_WinHttpWriteProxySettings                       	,	addr_WinHttpWriteProxySettings                       
+        LoadApi rsi,  rdi,     api_auxGetDevCapsA                                  	,	addr_auxGetDevCapsA                                  
+        LoadApi rsi,  rdi,     api_auxGetDevCapsW                                  	,	addr_auxGetDevCapsW                                  
+        LoadApi rsi,  rdi,     api_auxGetNumDevs                                   	,	addr_auxGetNumDevs                                   
+        LoadApi rsi,  rdi,     api_auxGetVolume                                    	,	addr_auxGetVolume                                    
+        LoadApi rsi,  rdi,     api_auxOutMessage                                   	,	addr_auxOutMessage                                   
+        LoadApi rsi,  rdi,     api_auxSetVolume                                    	,	addr_auxSetVolume                                    
+        LoadApi rsi,  rdi,     api_joyConfigChanged                                	,	addr_joyConfigChanged                                
+        LoadApi rsi,  rdi,     api_joyGetDevCapsA                                  	,	addr_joyGetDevCapsA                                  
+        LoadApi rsi,  rdi,     api_joyGetDevCapsW                                  	,	addr_joyGetDevCapsW                                  
+        LoadApi rsi,  rdi,     api_joyGetNumDevs                                   	,	addr_joyGetNumDevs                                   
+        LoadApi rsi,  rdi,     api_joyGetPos                                       	,	addr_joyGetPos                                       
+        LoadApi rsi,  rdi,     api_joyGetPosEx                                     	,	addr_joyGetPosEx                                     
+        LoadApi rsi,  rdi,     api_joyGetThreshold                                 	,	addr_joyGetThreshold                                 
+        LoadApi rsi,  rdi,     api_joyReleaseCapture                               	,	addr_joyReleaseCapture                               
+        LoadApi rsi,  rdi,     api_joySetCapture                                   	,	addr_joySetCapture                                   
+        LoadApi rsi,  rdi,     api_joySetThreshold                                 	,	addr_joySetThreshold                                 
+        LoadApi rsi,  rdi,     api_mciDriverNotify                                 	,	addr_mciDriverNotify                                 
+        LoadApi rsi,  rdi,     api_mciDriverYield                                  	,	addr_mciDriverYield                                  
+        LoadApi rsi,  rdi,     api_mciExecute                                      	,	addr_mciExecute                                      
+        LoadApi rsi,  rdi,     api_mciFreeCommandResource                          	,	addr_mciFreeCommandResource                          
+        LoadApi rsi,  rdi,     api_mciGetCreatorTask                               	,	addr_mciGetCreatorTask                               
+        LoadApi rsi,  rdi,     api_mciGetDeviceIDA                                 	,	addr_mciGetDeviceIDA                                 
+        LoadApi rsi,  rdi,     api_mciGetDeviceIDFromElementIDA                    	,	addr_mciGetDeviceIDFromElementIDA                    
+        LoadApi rsi,  rdi,     api_mciGetDeviceIDFromElementIDW                    	,	addr_mciGetDeviceIDFromElementIDW                    
+        LoadApi rsi,  rdi,     api_mciGetDeviceIDW                                 	,	addr_mciGetDeviceIDW                                 
+        LoadApi rsi,  rdi,     api_mciGetDriverData                                	,	addr_mciGetDriverData                                
+        LoadApi rsi,  rdi,     api_mciGetErrorStringA                              	,	addr_mciGetErrorStringA                              
+        LoadApi rsi,  rdi,     api_mciGetErrorStringW                              	,	addr_mciGetErrorStringW                              
+        LoadApi rsi,  rdi,     api_mciGetYieldProc                                 	,	addr_mciGetYieldProc                                 
+        LoadApi rsi,  rdi,     api_mciLoadCommandResource                          	,	addr_mciLoadCommandResource                          
+        LoadApi rsi,  rdi,     api_mciSendCommandA                                 	,	addr_mciSendCommandA                                 
+        LoadApi rsi,  rdi,     api_mciSendCommandW                                 	,	addr_mciSendCommandW                                 
+        LoadApi rsi,  rdi,     api_mciSendStringA                                  	,	addr_mciSendStringA                                  
+        LoadApi rsi,  rdi,     api_mciSendStringW                                  	,	addr_mciSendStringW                                  
+        LoadApi rsi,  rdi,     api_mciSetDriverData                                	,	addr_mciSetDriverData                                
+        LoadApi rsi,  rdi,     api_mciSetYieldProc                                 	,	addr_mciSetYieldProc                                 
+        LoadApi rsi,  rdi,     api_midiConnect                                     	,	addr_midiConnect                                     
+        LoadApi rsi,  rdi,     api_midiDisconnect                                  	,	addr_midiDisconnect                                  
+        LoadApi rsi,  rdi,     api_midiInAddBuffer                                 	,	addr_midiInAddBuffer                                 
+        LoadApi rsi,  rdi,     api_midiInClose                                     	,	addr_midiInClose                                     
+        LoadApi rsi,  rdi,     api_midiInGetDevCapsA                               	,	addr_midiInGetDevCapsA                               
+        LoadApi rsi,  rdi,     api_midiInGetDevCapsW                               	,	addr_midiInGetDevCapsW                               
+        LoadApi rsi,  rdi,     api_midiInGetErrorTextA                             	,	addr_midiInGetErrorTextA                             
+        LoadApi rsi,  rdi,     api_midiInGetErrorTextW                             	,	addr_midiInGetErrorTextW                             
+        LoadApi rsi,  rdi,     api_midiInGetID                                     	,	addr_midiInGetID                                     
+        LoadApi rsi,  rdi,     api_midiInGetNumDevs                                	,	addr_midiInGetNumDevs                                
+        LoadApi rsi,  rdi,     api_midiInMessage                                   	,	addr_midiInMessage                                   
+        LoadApi rsi,  rdi,     api_midiInOpen                                      	,	addr_midiInOpen                                      
+        LoadApi rsi,  rdi,     api_midiInPrepareHeader                             	,	addr_midiInPrepareHeader                             
+        LoadApi rsi,  rdi,     api_midiInReset                                     	,	addr_midiInReset                                     
+        LoadApi rsi,  rdi,     api_midiInStart                                     	,	addr_midiInStart                                     
+        LoadApi rsi,  rdi,     api_midiInStop                                      	,	addr_midiInStop                                      
+        LoadApi rsi,  rdi,     api_midiInUnprepareHeader                           	,	addr_midiInUnprepareHeader                           
+        LoadApi rsi,  rdi,     api_midiOutCacheDrumPatches                         	,	addr_midiOutCacheDrumPatches                         
+        LoadApi rsi,  rdi,     api_midiOutCachePatches                             	,	addr_midiOutCachePatches                             
+        LoadApi rsi,  rdi,     api_midiOutClose                                    	,	addr_midiOutClose                                    
+        LoadApi rsi,  rdi,     api_midiOutGetDevCapsA                              	,	addr_midiOutGetDevCapsA                              
+        LoadApi rsi,  rdi,     api_midiOutGetDevCapsW                              	,	addr_midiOutGetDevCapsW                              
+        LoadApi rsi,  rdi,     api_midiOutGetErrorTextA                            	,	addr_midiOutGetErrorTextA                            
+        LoadApi rsi,  rdi,     api_midiOutGetErrorTextW                            	,	addr_midiOutGetErrorTextW                            
+        LoadApi rsi,  rdi,     api_midiOutGetID                                    	,	addr_midiOutGetID                                    
+        LoadApi rsi,  rdi,     api_midiOutGetNumDevs                               	,	addr_midiOutGetNumDevs                               
+        LoadApi rsi,  rdi,     api_midiOutGetVolume                                	,	addr_midiOutGetVolume                                
+        LoadApi rsi,  rdi,     api_midiOutLongMsg                                  	,	addr_midiOutLongMsg                                  
+        LoadApi rsi,  rdi,     api_midiOutMessage                                  	,	addr_midiOutMessage                                  
+        LoadApi rsi,  rdi,     api_midiOutOpen                                     	,	addr_midiOutOpen                                     
+        LoadApi rsi,  rdi,     api_midiOutPrepareHeader                            	,	addr_midiOutPrepareHeader                            
+        LoadApi rsi,  rdi,     api_midiOutReset                                    	,	addr_midiOutReset                                    
+        LoadApi rsi,  rdi,     api_midiOutSetVolume                                	,	addr_midiOutSetVolume                                
+        LoadApi rsi,  rdi,     api_midiOutShortMsg                                 	,	addr_midiOutShortMsg                                 
+        LoadApi rsi,  rdi,     api_midiOutUnprepareHeader                          	,	addr_midiOutUnprepareHeader                          
+        LoadApi rsi,  rdi,     api_midiStreamClose                                 	,	addr_midiStreamClose                                 
+        LoadApi rsi,  rdi,     api_midiStreamOpen                                  	,	addr_midiStreamOpen                                  
+        LoadApi rsi,  rdi,     api_midiStreamOut                                   	,	addr_midiStreamOut                                   
+        LoadApi rsi,  rdi,     api_midiStreamPause                                 	,	addr_midiStreamPause                                 
+        LoadApi rsi,  rdi,     api_midiStreamPosition                              	,	addr_midiStreamPosition                              
+        LoadApi rsi,  rdi,     api_midiStreamProperty                              	,	addr_midiStreamProperty                              
+        LoadApi rsi,  rdi,     api_midiStreamRestart                               	,	addr_midiStreamRestart                               
+        LoadApi rsi,  rdi,     api_midiStreamStop                                  	,	addr_midiStreamStop                                  
+        LoadApi rsi,  rdi,     api_mixerClose                                      	,	addr_mixerClose                                      
+        LoadApi rsi,  rdi,     api_mixerGetControlDetailsA                         	,	addr_mixerGetControlDetailsA                         
+        LoadApi rsi,  rdi,     api_mixerGetControlDetailsW                         	,	addr_mixerGetControlDetailsW                         
+        LoadApi rsi,  rdi,     api_mixerGetDevCapsA                                	,	addr_mixerGetDevCapsA                                
+        LoadApi rsi,  rdi,     api_mixerGetDevCapsW                                	,	addr_mixerGetDevCapsW                                
+        LoadApi rsi,  rdi,     api_mixerGetID                                      	,	addr_mixerGetID                                      
+        LoadApi rsi,  rdi,     api_mixerGetLineControlsA                           	,	addr_mixerGetLineControlsA                           
+        LoadApi rsi,  rdi,     api_mixerGetLineControlsW                           	,	addr_mixerGetLineControlsW                           
+        LoadApi rsi,  rdi,     api_mixerGetLineInfoA                               	,	addr_mixerGetLineInfoA                               
+        LoadApi rsi,  rdi,     api_mixerGetLineInfoW                               	,	addr_mixerGetLineInfoW                               
+        LoadApi rsi,  rdi,     api_mixerGetNumDevs                                 	,	addr_mixerGetNumDevs                                 
+        LoadApi rsi,  rdi,     api_mixerMessage                                    	,	addr_mixerMessage                                    
+        LoadApi rsi,  rdi,     api_mixerOpen                                       	,	addr_mixerOpen                                       
+        LoadApi rsi,  rdi,     api_mixerSetControlDetails                          	,	addr_mixerSetControlDetails                          
+        LoadApi rsi,  rdi,     api_mmGetCurrentTask                                	,	addr_mmGetCurrentTask                                
+        LoadApi rsi,  rdi,     api_mmTaskBlock                                     	,	addr_mmTaskBlock                                     
+        LoadApi rsi,  rdi,     api_mmTaskCreate                                    	,	addr_mmTaskCreate                                    
+        LoadApi rsi,  rdi,     api_mmTaskSignal                                    	,	addr_mmTaskSignal                                    
+        LoadApi rsi,  rdi,     api_mmTaskYield                                     	,	addr_mmTaskYield                                     
+        LoadApi rsi,  rdi,     api_mmioAdvance                                     	,	addr_mmioAdvance                                     
+        LoadApi rsi,  rdi,     api_mmioAscend                                      	,	addr_mmioAscend                                      
+        LoadApi rsi,  rdi,     api_mmioClose                                       	,	addr_mmioClose                                       
+        LoadApi rsi,  rdi,     api_mmioCreateChunk                                 	,	addr_mmioCreateChunk                                 
+        LoadApi rsi,  rdi,     api_mmioDescend                                     	,	addr_mmioDescend                                     
+        LoadApi rsi,  rdi,     api_mmioFlush                                       	,	addr_mmioFlush                                       
+        LoadApi rsi,  rdi,     api_mmioGetInfo                                     	,	addr_mmioGetInfo                                     
+        LoadApi rsi,  rdi,     api_mmioInstallIOProc16                             	,	addr_mmioInstallIOProc16                             
+        LoadApi rsi,  rdi,     api_mmioInstallIOProcA                              	,	addr_mmioInstallIOProcA                              
+        LoadApi rsi,  rdi,     api_mmioInstallIOProcW                              	,	addr_mmioInstallIOProcW                              
+        LoadApi rsi,  rdi,     api_mmioOpenA                                       	,	addr_mmioOpenA                                       
+        LoadApi rsi,  rdi,     api_mmioOpenW                                       	,	addr_mmioOpenW                                       
+        LoadApi rsi,  rdi,     api_mmioRead                                        	,	addr_mmioRead                                        
+        LoadApi rsi,  rdi,     api_mmioRenameA                                     	,	addr_mmioRenameA                                     
+        LoadApi rsi,  rdi,     api_mmioRenameW                                     	,	addr_mmioRenameW                                     
+        LoadApi rsi,  rdi,     api_mmioSeek                                        	,	addr_mmioSeek                                        
+        LoadApi rsi,  rdi,     api_mmioSendMessage                                 	,	addr_mmioSendMessage                                 
+        LoadApi rsi,  rdi,     api_mmioSetBuffer                                   	,	addr_mmioSetBuffer                                   
+        LoadApi rsi,  rdi,     api_mmioSetInfo                                     	,	addr_mmioSetInfo                                     
+        LoadApi rsi,  rdi,     api_mmioStringToFOURCCA                             	,	addr_mmioStringToFOURCCA                             
+        LoadApi rsi,  rdi,     api_mmioStringToFOURCCW                             	,	addr_mmioStringToFOURCCW                             
+        LoadApi rsi,  rdi,     api_mmioWrite                                       	,	addr_mmioWrite                                       
+        LoadApi rsi,  rdi,     api_mmsystemGetVersion                              	,	addr_mmsystemGetVersion                              
+        LoadApi rsi,  rdi,     api_sndPlaySoundA                                   	,	addr_sndPlaySoundA                                   
+        LoadApi rsi,  rdi,     api_sndPlaySoundW                                   	,	addr_sndPlaySoundW                                   
+        LoadApi rsi,  rdi,     api_timeBeginPeriod                                 	,	addr_timeBeginPeriod                                 
+        LoadApi rsi,  rdi,     api_timeEndPeriod                                   	,	addr_timeEndPeriod                                   
+        LoadApi rsi,  rdi,     api_timeGetDevCaps                                  	,	addr_timeGetDevCaps                                  
+        LoadApi rsi,  rdi,     api_timeGetSystemTime                               	,	addr_timeGetSystemTime                               
+        LoadApi rsi,  rdi,     api_timeGetTime                                     	,	addr_timeGetTime                                     
+        LoadApi rsi,  rdi,     api_timeKillEvent                                   	,	addr_timeKillEvent                                   
+        LoadApi rsi,  rdi,     api_timeSetEvent                                    	,	addr_timeSetEvent                                    
+        LoadApi rsi,  rdi,     api_waveInAddBuffer                                 	,	addr_waveInAddBuffer                                 
+        LoadApi rsi,  rdi,     api_waveInClose                                     	,	addr_waveInClose                                     
+        LoadApi rsi,  rdi,     api_waveInGetDevCapsA                               	,	addr_waveInGetDevCapsA                               
+        LoadApi rsi,  rdi,     api_waveInGetDevCapsW                               	,	addr_waveInGetDevCapsW                               
+        LoadApi rsi,  rdi,     api_waveInGetErrorTextA                             	,	addr_waveInGetErrorTextA                             
+        LoadApi rsi,  rdi,     api_waveInGetErrorTextW                             	,	addr_waveInGetErrorTextW                             
+        LoadApi rsi,  rdi,     api_waveInGetID                                     	,	addr_waveInGetID                                     
+        LoadApi rsi,  rdi,     api_waveInGetNumDevs                                	,	addr_waveInGetNumDevs                                
+        LoadApi rsi,  rdi,     api_waveInGetPosition                               	,	addr_waveInGetPosition                               
+        LoadApi rsi,  rdi,     api_waveInMessage                                   	,	addr_waveInMessage                                   
+        LoadApi rsi,  rdi,     api_waveInOpen                                      	,	addr_waveInOpen                                      
+        LoadApi rsi,  rdi,     api_waveInPrepareHeader                             	,	addr_waveInPrepareHeader                             
+        LoadApi rsi,  rdi,     api_waveInReset                                     	,	addr_waveInReset                                     
+        LoadApi rsi,  rdi,     api_waveInStart                                     	,	addr_waveInStart                                     
+        LoadApi rsi,  rdi,     api_waveInStop                                      	,	addr_waveInStop                                      
+        LoadApi rsi,  rdi,     api_waveInUnprepareHeader                           	,	addr_waveInUnprepareHeader                           
+        LoadApi rsi,  rdi,     api_waveOutBreakLoop                                	,	addr_waveOutBreakLoop                                
+        LoadApi rsi,  rdi,     api_waveOutClose                                    	,	addr_waveOutClose                                    
+        LoadApi rsi,  rdi,     api_waveOutGetDevCapsA                              	,	addr_waveOutGetDevCapsA                              
+        LoadApi rsi,  rdi,     api_waveOutGetDevCapsW                              	,	addr_waveOutGetDevCapsW                              
+        LoadApi rsi,  rdi,     api_waveOutGetErrorTextA                            	,	addr_waveOutGetErrorTextA                            
+        LoadApi rsi,  rdi,     api_waveOutGetErrorTextW                            	,	addr_waveOutGetErrorTextW                            
+        LoadApi rsi,  rdi,     api_waveOutGetID                                    	,	addr_waveOutGetID                                    
+        LoadApi rsi,  rdi,     api_waveOutGetNumDevs                               	,	addr_waveOutGetNumDevs                               
+        LoadApi rsi,  rdi,     api_waveOutGetPitch                                 	,	addr_waveOutGetPitch                                 
+        LoadApi rsi,  rdi,     api_waveOutGetPlaybackRate                          	,	addr_waveOutGetPlaybackRate                          
+        LoadApi rsi,  rdi,     api_waveOutGetPosition                              	,	addr_waveOutGetPosition                              
+        LoadApi rsi,  rdi,     api_waveOutGetVolume                                	,	addr_waveOutGetVolume                                
+        LoadApi rsi,  rdi,     api_waveOutMessage                                  	,	addr_waveOutMessage                                  
+        LoadApi rsi,  rdi,     api_waveOutOpen                                     	,	addr_waveOutOpen                                     
+        LoadApi rsi,  rdi,     api_waveOutPause                                    	,	addr_waveOutPause                                    
+        LoadApi rsi,  rdi,     api_waveOutPrepareHeader                            	,	addr_waveOutPrepareHeader                            
+        LoadApi rsi,  rdi,     api_waveOutReset                                    	,	addr_waveOutReset                                    
+        LoadApi rsi,  rdi,     api_waveOutRestart                                  	,	addr_waveOutRestart                                  
+        LoadApi rsi,  rdi,     api_waveOutSetPitch                                 	,	addr_waveOutSetPitch                                 
+        LoadApi rsi,  rdi,     api_waveOutSetPlaybackRate                          	,	addr_waveOutSetPlaybackRate                          
+        LoadApi rsi,  rdi,     api_waveOutSetVolume                                	,	addr_waveOutSetVolume                                
+        LoadApi rsi,  rdi,     api_waveOutUnprepareHeader                          	,	addr_waveOutUnprepareHeader                          
+        LoadApi rsi,  rdi,     api_waveOutWrite                                    	,	addr_waveOutWrite           
+                             
+    add rsp,0x28   
+    pop rdi                                     
+    pop rsi
+    
+    xor rax,rax
     ret
-endp
+ 
+
+
+
+align 16
+DllEntryPoint:
+    sub rsp,0x20
+
+        .if rdx   =   1     
+        
+           call LoadOrigExports
+               
+           mov rcx,dll_Maple
+           call qword[LoadLibrary]     
+                                           
+        .endif                
+
+    mov	rax,TRUE
+    add rsp,0x28
+    ret
+
+
 
 align 16
 jmp_CloseDriver:                                     	jmp	[addr_CloseDriver                                     ]	
@@ -1806,767 +1835,774 @@ align 16
 api_waveOutUnprepareHeader                          	db	'waveOutUnprepareHeader',0	
 
 align 16
-api_waveOutWrite                                    	db	'waveOutWrite',0	
+api_waveOutWrite                                    	db	'waveOutWrite',0
 
 align 16
 dll_Maple                                               TCHAR      'Maple.dll', 0
 
-
 align 16
+
 .end DllEntryPoint
 
 align 16
-addr_CloseDriver                                     	dd	?	
+addr_CloseDriver                                     	dq	?	
 
 align 16
-addr_DefDriverProc                                   	dd	?	
+addr_DefDriverProc                                   	dq	?	
 
 align 16
-addr_DllCanUnloadNow                                 	dd	?	
+addr_DllCanUnloadNow                                 	dq	?	
 
 align 16
-addr_DllGetClassObject                               	dd	?	
+addr_DllGetClassObject                               	dq	?	
 
 align 16
-addr_DllRegisterServer                               	dd	?	
+addr_DllRegisterServer                               	dq	?	
 
 align 16
-addr_DllUnregisterServer                             	dd	?	
+addr_DllUnregisterServer                             	dq	?	
 
 align 16
-addr_DriverCallback                                  	dd	?	
+addr_DriverCallback                                  	dq	?	
 
 align 16
-addr_DrvClose                                        	dd	?	
+addr_DrvClose                                        	dq	?	
 
 align 16
-addr_DrvDefDriverProc                                	dd	?	
+addr_DrvDefDriverProc                                	dq	?	
 
 align 16
-addr_DrvGetModuleHandle                              	dd	?	
+addr_DrvGetModuleHandle                              	dq	?	
 
 align 16
-addr_DrvOpen                                         	dd	?	
+addr_DrvOpen                                         	dq	?	
 
 align 16
-addr_DrvOpenA                                        	dd	?	
+addr_DrvOpenA                                        	dq	?	
 
 align 16
-addr_DrvSendMessage                                  	dd	?	
+addr_DrvSendMessage                                  	dq	?	
 
 align 16
-addr_GetDriverFlags                                  	dd	?	
+addr_GetDriverFlags                                  	dq	?	
 
 align 16
-addr_GetDriverModuleHandle                           	dd	?	
+addr_GetDriverModuleHandle                           	dq	?	
 
 align 16
-addr_GetFileVersionInfoA                             	dd	?	
+addr_GetFileVersionInfoA                             	dq	?	
 
 align 16
-addr_GetFileVersionInfoExA                           	dd	?	
+addr_GetFileVersionInfoExA                           	dq	?	
 
 align 16
-addr_GetFileVersionInfoExW                           	dd	?	
+addr_GetFileVersionInfoExW                           	dq	?	
 
 align 16
-addr_GetFileVersionInfoSizeA                         	dd	?	
+addr_GetFileVersionInfoSizeA                         	dq	?	
 
 align 16
-addr_GetFileVersionInfoSizeExA                       	dd	?	
+addr_GetFileVersionInfoSizeExA                       	dq	?	
 
 align 16
-addr_GetFileVersionInfoSizeExW                       	dd	?	
+addr_GetFileVersionInfoSizeExW                       	dq	?	
 
 align 16
-addr_GetFileVersionInfoSizeW                         	dd	?	
+addr_GetFileVersionInfoSizeW                         	dq	?	
 
 align 16
-addr_GetFileVersionInfoW                             	dd	?	
+addr_GetFileVersionInfoW                             	dq	?	
 
 align 16
-addr_OpenDriver                                      	dd	?	
+addr_OpenDriver                                      	dq	?	
 
 align 16
-addr_OpenDriverA                                     	dd	?	
+addr_OpenDriverA                                     	dq	?	
 
 align 16
-addr_PlaySound                                       	dd	?	
+addr_PlaySound                                       	dq	?	
 
 align 16
-addr_PlaySoundA                                      	dd	?	
+addr_PlaySoundA                                      	dq	?	
 
 align 16
-addr_PlaySoundW                                      	dd	?	
+addr_PlaySoundW                                      	dq	?	
 
 align 16
-addr_SendDriverMessage                               	dd	?	
+addr_SendDriverMessage                               	dq	?	
 
 align 16
-addr_VerFindFileA                                    	dd	?	
+addr_VerFindFileA                                    	dq	?	
 
 align 16
-addr_VerFindFileW                                    	dd	?	
+addr_VerFindFileW                                    	dq	?	
 
 align 16
-addr_VerInstallFileA                                 	dd	?	
+addr_VerInstallFileA                                 	dq	?	
 
 align 16
-addr_VerInstallFileW                                 	dd	?	
+addr_VerInstallFileW                                 	dq	?	
 
 align 16
-addr_VerLanguageNameA                                	dd	?	
+addr_VerLanguageNameA                                	dq	?	
 
 align 16
-addr_VerLanguageNameW                                	dd	?	
+addr_VerLanguageNameW                                	dq	?	
 
 align 16
-addr_VerQueryValueA                                  	dd	?	
+addr_VerQueryValueA                                  	dq	?	
 
 align 16
-addr_VerQueryValueW                                  	dd	?	
+addr_VerQueryValueW                                  	dq	?	
 
 align 16
-addr_WinHttpAddRequestHeaders                        	dd	?	
+addr_WinHttpAddRequestHeaders                        	dq	?	
 
 align 16
-addr_WinHttpCheckPlatform                            	dd	?	
+addr_WinHttpCheckPlatform                            	dq	?	
 
 align 16
-addr_WinHttpCloseHandle                              	dd	?	
+addr_WinHttpCloseHandle                              	dq	?	
 
 align 16
-addr_WinHttpConnect                                  	dd	?	
+addr_WinHttpConnect                                  	dq	?	
 
 align 16
-addr_WinHttpCrackUrl                                 	dd	?	
+addr_WinHttpCrackUrl                                 	dq	?	
 
 align 16
-addr_WinHttpCreateProxyResolver                      	dd	?	
+addr_WinHttpCreateProxyResolver                      	dq	?	
 
 align 16
-addr_WinHttpCreateUrl                                	dd	?	
+addr_WinHttpCreateUrl                                	dq	?	
 
 align 16
-addr_WinHttpDetectAutoProxyConfigUrl                 	dd	?	
+addr_WinHttpDetectAutoProxyConfigUrl                 	dq	?	
 
 align 16
-addr_WinHttpFreeProxyResult                          	dd	?	
+addr_WinHttpFreeProxyResult                          	dq	?	
 
 align 16
-addr_WinHttpFreeProxyResultEx                        	dd	?	
+addr_WinHttpFreeProxyResultEx                        	dq	?	
 
 align 16
-addr_WinHttpFreeProxySettings                        	dd	?	
+addr_WinHttpFreeProxySettings                        	dq	?	
 
 align 16
-addr_WinHttpGetDefaultProxyConfiguration             	dd	?	
+addr_WinHttpGetDefaultProxyConfiguration             	dq	?	
 
 align 16
-addr_WinHttpGetIEProxyConfigForCurrentUser           	dd	?	
+addr_WinHttpGetIEProxyConfigForCurrentUser           	dq	?	
 
 align 16
-addr_WinHttpGetProxyForUrl                           	dd	?	
+addr_WinHttpGetProxyForUrl                           	dq	?	
 
 align 16
-addr_WinHttpGetProxyForUrlEx                         	dd	?	
+addr_WinHttpGetProxyForUrlEx                         	dq	?	
 
 align 16
-addr_WinHttpGetProxyForUrlEx2                        	dd	?	
+addr_WinHttpGetProxyForUrlEx2                        	dq	?	
 
 align 16
-addr_WinHttpGetProxyResult                           	dd	?	
+addr_WinHttpGetProxyResult                           	dq	?	
 
 align 16
-addr_WinHttpGetProxyResultEx                         	dd	?	
+addr_WinHttpGetProxyResultEx                         	dq	?	
 
 align 16
-addr_WinHttpGetProxySettingsVersion                  	dd	?	
+addr_WinHttpGetProxySettingsVersion                  	dq	?	
 
 align 16
-addr_WinHttpOpen                                     	dd	?	
+addr_WinHttpOpen                                     	dq	?	
 
 align 16
-addr_WinHttpOpenRequest                              	dd	?	
+addr_WinHttpOpenRequest                              	dq	?	
 
 align 16
-addr_WinHttpQueryAuthSchemes                         	dd	?	
+addr_WinHttpQueryAuthSchemes                         	dq	?	
 
 align 16
-addr_WinHttpQueryDataAvailable                       	dd	?	
+addr_WinHttpQueryDataAvailable                       	dq	?	
 
 align 16
-addr_WinHttpQueryHeaders                             	dd	?	
+addr_WinHttpQueryHeaders                             	dq	?	
 
 align 16
-addr_WinHttpQueryOption                              	dd	?	
+addr_WinHttpQueryOption                              	dq	?	
 
 align 16
-addr_WinHttpReadData                                 	dd	?	
+addr_WinHttpReadData                                 	dq	?	
 
 align 16
-addr_WinHttpReadProxySettings                        	dd	?	
+addr_WinHttpReadProxySettings                        	dq	?	
 
 align 16
-addr_WinHttpReceiveResponse                          	dd	?	
+addr_WinHttpReceiveResponse                          	dq	?	
 
 align 16
-addr_WinHttpResetAutoProxy                           	dd	?	
+addr_WinHttpResetAutoProxy                           	dq	?	
 
 align 16
-addr_WinHttpSendRequest                              	dd	?	
+addr_WinHttpSendRequest                              	dq	?	
 
 align 16
-addr_WinHttpSetCredentials                           	dd	?	
+addr_WinHttpSetCredentials                           	dq	?	
 
 align 16
-addr_WinHttpSetDefaultProxyConfiguration             	dd	?	
+addr_WinHttpSetDefaultProxyConfiguration             	dq	?	
 
 align 16
-addr_WinHttpSetOption                                	dd	?	
+addr_WinHttpSetOption                                	dq	?	
 
 align 16
-addr_WinHttpSetStatusCallback                        	dd	?	
+addr_WinHttpSetStatusCallback                        	dq	?	
 
 align 16
-addr_WinHttpSetTimeouts                              	dd	?	
+addr_WinHttpSetTimeouts                              	dq	?	
 
 align 16
-addr_WinHttpTimeFromSystemTime                       	dd	?	
+addr_WinHttpTimeFromSystemTime                       	dq	?	
 
 align 16
-addr_WinHttpTimeToSystemTime                         	dd	?	
+addr_WinHttpTimeToSystemTime                         	dq	?	
 
 align 16
-addr_WinHttpWebSocketClose                           	dd	?	
+addr_WinHttpWebSocketClose                           	dq	?	
 
 align 16
-addr_WinHttpWebSocketCompleteUpgrade                 	dd	?	
+addr_WinHttpWebSocketCompleteUpgrade                 	dq	?	
 
 align 16
-addr_WinHttpWebSocketQueryCloseStatus                	dd	?	
+addr_WinHttpWebSocketQueryCloseStatus                	dq	?	
 
 align 16
-addr_WinHttpWebSocketReceive                         	dd	?	
+addr_WinHttpWebSocketReceive                         	dq	?	
 
 align 16
-addr_WinHttpWebSocketSend                            	dd	?	
+addr_WinHttpWebSocketSend                            	dq	?	
 
 align 16
-addr_WinHttpWebSocketShutdown                        	dd	?	
+addr_WinHttpWebSocketShutdown                        	dq	?	
 
 align 16
-addr_WinHttpWriteData                                	dd	?	
+addr_WinHttpWriteData                                	dq	?	
 
 align 16
-addr_WinHttpWriteProxySettings                       	dd	?	
+addr_WinHttpWriteProxySettings                       	dq	?	
 
 align 16
-addr_auxGetDevCapsA                                  	dd	?	
+addr_auxGetDevCapsA                                  	dq	?	
 
 align 16
-addr_auxGetDevCapsW                                  	dd	?	
+addr_auxGetDevCapsW                                  	dq	?	
 
 align 16
-addr_auxGetNumDevs                                   	dd	?	
+addr_auxGetNumDevs                                   	dq	?	
 
 align 16
-addr_auxGetVolume                                    	dd	?	
+addr_auxGetVolume                                    	dq	?	
 
 align 16
-addr_auxOutMessage                                   	dd	?	
+addr_auxOutMessage                                   	dq	?	
 
 align 16
-addr_auxSetVolume                                    	dd	?	
+addr_auxSetVolume                                    	dq	?	
 
 align 16
-addr_joyConfigChanged                                	dd	?	
+addr_joyConfigChanged                                	dq	?	
 
 align 16
-addr_joyGetDevCapsA                                  	dd	?	
+addr_joyGetDevCapsA                                  	dq	?	
 
 align 16
-addr_joyGetDevCapsW                                  	dd	?	
+addr_joyGetDevCapsW                                  	dq	?	
 
 align 16
-addr_joyGetNumDevs                                   	dd	?	
+addr_joyGetNumDevs                                   	dq	?	
 
 align 16
-addr_joyGetPos                                       	dd	?	
+addr_joyGetPos                                       	dq	?	
 
 align 16
-addr_joyGetPosEx                                     	dd	?	
+addr_joyGetPosEx                                     	dq	?	
 
 align 16
-addr_joyGetThreshold                                 	dd	?	
+addr_joyGetThreshold                                 	dq	?	
 
 align 16
-addr_joyReleaseCapture                               	dd	?	
+addr_joyReleaseCapture                               	dq	?	
 
 align 16
-addr_joySetCapture                                   	dd	?	
+addr_joySetCapture                                   	dq	?	
 
 align 16
-addr_joySetThreshold                                 	dd	?	
+addr_joySetThreshold                                 	dq	?	
 
 align 16
-addr_mciDriverNotify                                 	dd	?	
+addr_mciDriverNotify                                 	dq	?	
 
 align 16
-addr_mciDriverYield                                  	dd	?	
+addr_mciDriverYield                                  	dq	?	
 
 align 16
-addr_mciExecute                                      	dd	?	
+addr_mciExecute                                      	dq	?	
 
 align 16
-addr_mciFreeCommandResource                          	dd	?	
+addr_mciFreeCommandResource                          	dq	?	
 
 align 16
-addr_mciGetCreatorTask                               	dd	?	
+addr_mciGetCreatorTask                               	dq	?	
 
 align 16
-addr_mciGetDeviceIDA                                 	dd	?	
+addr_mciGetDeviceIDA                                 	dq	?	
 
 align 16
-addr_mciGetDeviceIDFromElementIDA                    	dd	?	
+addr_mciGetDeviceIDFromElementIDA                    	dq	?	
 
 align 16
-addr_mciGetDeviceIDFromElementIDW                    	dd	?	
+addr_mciGetDeviceIDFromElementIDW                    	dq	?	
 
 align 16
-addr_mciGetDeviceIDW                                 	dd	?	
+addr_mciGetDeviceIDW                                 	dq	?	
 
 align 16
-addr_mciGetDriverData                                	dd	?	
+addr_mciGetDriverData                                	dq	?	
 
 align 16
-addr_mciGetErrorStringA                              	dd	?	
+addr_mciGetErrorStringA                              	dq	?	
 
 align 16
-addr_mciGetErrorStringW                              	dd	?	
+addr_mciGetErrorStringW                              	dq	?	
 
 align 16
-addr_mciGetYieldProc                                 	dd	?	
+addr_mciGetYieldProc                                 	dq	?	
 
 align 16
-addr_mciLoadCommandResource                          	dd	?	
+addr_mciLoadCommandResource                          	dq	?	
 
 align 16
-addr_mciSendCommandA                                 	dd	?	
+addr_mciSendCommandA                                 	dq	?	
 
 align 16
-addr_mciSendCommandW                                 	dd	?	
+addr_mciSendCommandW                                 	dq	?	
 
 align 16
-addr_mciSendStringA                                  	dd	?	
+addr_mciSendStringA                                  	dq	?	
 
 align 16
-addr_mciSendStringW                                  	dd	?	
+addr_mciSendStringW                                  	dq	?	
 
 align 16
-addr_mciSetDriverData                                	dd	?	
+addr_mciSetDriverData                                	dq	?	
 
 align 16
-addr_mciSetYieldProc                                 	dd	?	
+addr_mciSetYieldProc                                 	dq	?	
 
 align 16
-addr_midiConnect                                     	dd	?	
+addr_midiConnect                                     	dq	?	
 
 align 16
-addr_midiDisconnect                                  	dd	?	
+addr_midiDisconnect                                  	dq	?	
 
 align 16
-addr_midiInAddBuffer                                 	dd	?	
+addr_midiInAddBuffer                                 	dq	?	
 
 align 16
-addr_midiInClose                                     	dd	?	
+addr_midiInClose                                     	dq	?	
 
 align 16
-addr_midiInGetDevCapsA                               	dd	?	
+addr_midiInGetDevCapsA                               	dq	?	
 
 align 16
-addr_midiInGetDevCapsW                               	dd	?	
+addr_midiInGetDevCapsW                               	dq	?	
 
 align 16
-addr_midiInGetErrorTextA                             	dd	?	
+addr_midiInGetErrorTextA                             	dq	?	
 
 align 16
-addr_midiInGetErrorTextW                             	dd	?	
+addr_midiInGetErrorTextW                             	dq	?	
 
 align 16
-addr_midiInGetID                                     	dd	?	
+addr_midiInGetID                                     	dq	?	
 
 align 16
-addr_midiInGetNumDevs                                	dd	?	
+addr_midiInGetNumDevs                                	dq	?	
 
 align 16
-addr_midiInMessage                                   	dd	?	
+addr_midiInMessage                                   	dq	?	
 
 align 16
-addr_midiInOpen                                      	dd	?	
+addr_midiInOpen                                      	dq	?	
 
 align 16
-addr_midiInPrepareHeader                             	dd	?	
+addr_midiInPrepareHeader                             	dq	?	
 
 align 16
-addr_midiInReset                                     	dd	?	
+addr_midiInReset                                     	dq	?	
 
 align 16
-addr_midiInStart                                     	dd	?	
+addr_midiInStart                                     	dq	?	
 
 align 16
-addr_midiInStop                                      	dd	?	
+addr_midiInStop                                      	dq	?	
 
 align 16
-addr_midiInUnprepareHeader                           	dd	?	
+addr_midiInUnprepareHeader                           	dq	?	
 
 align 16
-addr_midiOutCacheDrumPatches                         	dd	?	
+addr_midiOutCacheDrumPatches                         	dq	?	
 
 align 16
-addr_midiOutCachePatches                             	dd	?	
+addr_midiOutCachePatches                             	dq	?	
 
 align 16
-addr_midiOutClose                                    	dd	?	
+addr_midiOutClose                                    	dq	?	
 
 align 16
-addr_midiOutGetDevCapsA                              	dd	?	
+addr_midiOutGetDevCapsA                              	dq	?	
 
 align 16
-addr_midiOutGetDevCapsW                              	dd	?	
+addr_midiOutGetDevCapsW                              	dq	?	
 
 align 16
-addr_midiOutGetErrorTextA                            	dd	?	
+addr_midiOutGetErrorTextA                            	dq	?	
 
 align 16
-addr_midiOutGetErrorTextW                            	dd	?	
+addr_midiOutGetErrorTextW                            	dq	?	
 
 align 16
-addr_midiOutGetID                                    	dd	?	
+addr_midiOutGetID                                    	dq	?	
 
 align 16
-addr_midiOutGetNumDevs                               	dd	?	
+addr_midiOutGetNumDevs                               	dq	?	
 
 align 16
-addr_midiOutGetVolume                                	dd	?	
+addr_midiOutGetVolume                                	dq	?	
 
 align 16
-addr_midiOutLongMsg                                  	dd	?	
+addr_midiOutLongMsg                                  	dq	?	
 
 align 16
-addr_midiOutMessage                                  	dd	?	
+addr_midiOutMessage                                  	dq	?	
 
 align 16
-addr_midiOutOpen                                     	dd	?	
+addr_midiOutOpen                                     	dq	?	
 
 align 16
-addr_midiOutPrepareHeader                            	dd	?	
+addr_midiOutPrepareHeader                            	dq	?	
 
 align 16
-addr_midiOutReset                                    	dd	?	
+addr_midiOutReset                                    	dq	?	
 
 align 16
-addr_midiOutSetVolume                                	dd	?	
+addr_midiOutSetVolume                                	dq	?	
 
 align 16
-addr_midiOutShortMsg                                 	dd	?	
+addr_midiOutShortMsg                                 	dq	?	
 
 align 16
-addr_midiOutUnprepareHeader                          	dd	?	
+addr_midiOutUnprepareHeader                          	dq	?	
 
 align 16
-addr_midiStreamClose                                 	dd	?	
+addr_midiStreamClose                                 	dq	?	
 
 align 16
-addr_midiStreamOpen                                  	dd	?	
+addr_midiStreamOpen                                  	dq	?	
 
 align 16
-addr_midiStreamOut                                   	dd	?	
+addr_midiStreamOut                                   	dq	?	
 
 align 16
-addr_midiStreamPause                                 	dd	?	
+addr_midiStreamPause                                 	dq	?	
 
 align 16
-addr_midiStreamPosition                              	dd	?	
+addr_midiStreamPosition                              	dq	?	
 
 align 16
-addr_midiStreamProperty                              	dd	?	
+addr_midiStreamProperty                              	dq	?	
 
 align 16
-addr_midiStreamRestart                               	dd	?	
+addr_midiStreamRestart                               	dq	?	
 
 align 16
-addr_midiStreamStop                                  	dd	?	
+addr_midiStreamStop                                  	dq	?	
 
 align 16
-addr_mixerClose                                      	dd	?	
+addr_mixerClose                                      	dq	?	
 
 align 16
-addr_mixerGetControlDetailsA                         	dd	?	
+addr_mixerGetControlDetailsA                         	dq	?	
 
 align 16
-addr_mixerGetControlDetailsW                         	dd	?	
+addr_mixerGetControlDetailsW                         	dq	?	
 
 align 16
-addr_mixerGetDevCapsA                                	dd	?	
+addr_mixerGetDevCapsA                                	dq	?	
 
 align 16
-addr_mixerGetDevCapsW                                	dd	?	
+addr_mixerGetDevCapsW                                	dq	?	
 
 align 16
-addr_mixerGetID                                      	dd	?	
+addr_mixerGetID                                      	dq	?	
 
 align 16
-addr_mixerGetLineControlsA                           	dd	?	
+addr_mixerGetLineControlsA                           	dq	?	
 
 align 16
-addr_mixerGetLineControlsW                           	dd	?	
+addr_mixerGetLineControlsW                           	dq	?	
 
 align 16
-addr_mixerGetLineInfoA                               	dd	?	
+addr_mixerGetLineInfoA                               	dq	?	
 
 align 16
-addr_mixerGetLineInfoW                               	dd	?	
+addr_mixerGetLineInfoW                               	dq	?	
 
 align 16
-addr_mixerGetNumDevs                                 	dd	?	
+addr_mixerGetNumDevs                                 	dq	?	
 
 align 16
-addr_mixerMessage                                    	dd	?	
+addr_mixerMessage                                    	dq	?	
 
 align 16
-addr_mixerOpen                                       	dd	?	
+addr_mixerOpen                                       	dq	?	
 
 align 16
-addr_mixerSetControlDetails                          	dd	?	
+addr_mixerSetControlDetails                          	dq	?	
 
 align 16
-addr_mmGetCurrentTask                                	dd	?	
+addr_mmGetCurrentTask                                	dq	?	
 
 align 16
-addr_mmTaskBlock                                     	dd	?	
+addr_mmTaskBlock                                     	dq	?	
 
 align 16
-addr_mmTaskCreate                                    	dd	?	
+addr_mmTaskCreate                                    	dq	?	
 
 align 16
-addr_mmTaskSignal                                    	dd	?	
+addr_mmTaskSignal                                    	dq	?	
 
 align 16
-addr_mmTaskYield                                     	dd	?	
+addr_mmTaskYield                                     	dq	?	
 
 align 16
-addr_mmioAdvance                                     	dd	?	
+addr_mmioAdvance                                     	dq	?	
 
 align 16
-addr_mmioAscend                                      	dd	?	
+addr_mmioAscend                                      	dq	?	
 
 align 16
-addr_mmioClose                                       	dd	?	
+addr_mmioClose                                       	dq	?	
 
 align 16
-addr_mmioCreateChunk                                 	dd	?	
+addr_mmioCreateChunk                                 	dq	?	
 
 align 16
-addr_mmioDescend                                     	dd	?	
+addr_mmioDescend                                     	dq	?	
 
 align 16
-addr_mmioFlush                                       	dd	?	
+addr_mmioFlush                                       	dq	?	
 
 align 16
-addr_mmioGetInfo                                     	dd	?	
+addr_mmioGetInfo                                     	dq	?	
 
 align 16
-addr_mmioInstallIOProc16                             	dd	?	
+addr_mmioInstallIOProc16                             	dq	?	
 
 align 16
-addr_mmioInstallIOProcA                              	dd	?	
+addr_mmioInstallIOProcA                              	dq	?	
 
 align 16
-addr_mmioInstallIOProcW                              	dd	?	
+addr_mmioInstallIOProcW                              	dq	?	
 
 align 16
-addr_mmioOpenA                                       	dd	?	
+addr_mmioOpenA                                       	dq	?	
 
 align 16
-addr_mmioOpenW                                       	dd	?	
+addr_mmioOpenW                                       	dq	?	
 
 align 16
-addr_mmioRead                                        	dd	?	
+addr_mmioRead                                        	dq	?	
 
 align 16
-addr_mmioRenameA                                     	dd	?	
+addr_mmioRenameA                                     	dq	?	
 
 align 16
-addr_mmioRenameW                                     	dd	?	
+addr_mmioRenameW                                     	dq	?	
 
 align 16
-addr_mmioSeek                                        	dd	?	
+addr_mmioSeek                                        	dq	?	
 
 align 16
-addr_mmioSendMessage                                 	dd	?	
+addr_mmioSendMessage                                 	dq	?	
 
 align 16
-addr_mmioSetBuffer                                   	dd	?	
+addr_mmioSetBuffer                                   	dq	?	
 
 align 16
-addr_mmioSetInfo                                     	dd	?	
+addr_mmioSetInfo                                     	dq	?	
 
 align 16
-addr_mmioStringToFOURCCA                             	dd	?	
+addr_mmioStringToFOURCCA                             	dq	?	
 
 align 16
-addr_mmioStringToFOURCCW                             	dd	?	
+addr_mmioStringToFOURCCW                             	dq	?	
 
 align 16
-addr_mmioWrite                                       	dd	?	
+addr_mmioWrite                                       	dq	?	
 
 align 16
-addr_mmsystemGetVersion                              	dd	?	
+addr_mmsystemGetVersion                              	dq	?	
 
 align 16
-addr_sndPlaySoundA                                   	dd	?	
+addr_sndPlaySoundA                                   	dq	?	
 
 align 16
-addr_sndPlaySoundW                                   	dd	?	
+addr_sndPlaySoundW                                   	dq	?	
 
 align 16
-addr_timeBeginPeriod                                 	dd	?	
+addr_timeBeginPeriod                                 	dq	?	
 
 align 16
-addr_timeEndPeriod                                   	dd	?	
+addr_timeEndPeriod                                   	dq	?	
 
 align 16
-addr_timeGetDevCaps                                  	dd	?	
+addr_timeGetDevCaps                                  	dq	?	
 
 align 16
-addr_timeGetSystemTime                               	dd	?	
+addr_timeGetSystemTime                               	dq	?	
 
 align 16
-addr_timeGetTime                                     	dd	?	
+addr_timeGetTime                                     	dq	?	
 
 align 16
-addr_timeKillEvent                                   	dd	?	
+addr_timeKillEvent                                   	dq	?	
 
 align 16
-addr_timeSetEvent                                    	dd	?	
+addr_timeSetEvent                                    	dq	?	
 
 align 16
-addr_waveInAddBuffer                                 	dd	?	
+addr_waveInAddBuffer                                 	dq	?	
 
 align 16
-addr_waveInClose                                     	dd	?	
+addr_waveInClose                                     	dq	?	
 
 align 16
-addr_waveInGetDevCapsA                               	dd	?	
+addr_waveInGetDevCapsA                               	dq	?	
 
 align 16
-addr_waveInGetDevCapsW                               	dd	?	
+addr_waveInGetDevCapsW                               	dq	?	
 
 align 16
-addr_waveInGetErrorTextA                             	dd	?	
+addr_waveInGetErrorTextA                             	dq	?	
 
 align 16
-addr_waveInGetErrorTextW                             	dd	?	
+addr_waveInGetErrorTextW                             	dq	?	
 
 align 16
-addr_waveInGetID                                     	dd	?	
+addr_waveInGetID                                     	dq	?	
 
 align 16
-addr_waveInGetNumDevs                                	dd	?	
+addr_waveInGetNumDevs                                	dq	?	
 
 align 16
-addr_waveInGetPosition                               	dd	?	
+addr_waveInGetPosition                               	dq	?	
 
 align 16
-addr_waveInMessage                                   	dd	?	
+addr_waveInMessage                                   	dq	?	
 
 align 16
-addr_waveInOpen                                      	dd	?	
+addr_waveInOpen                                      	dq	?	
 
 align 16
-addr_waveInPrepareHeader                             	dd	?	
+addr_waveInPrepareHeader                             	dq	?	
 
 align 16
-addr_waveInReset                                     	dd	?	
+addr_waveInReset                                     	dq	?	
 
 align 16
-addr_waveInStart                                     	dd	?	
+addr_waveInStart                                     	dq	?	
 
 align 16
-addr_waveInStop                                      	dd	?	
+addr_waveInStop                                      	dq	?	
 
 align 16
-addr_waveInUnprepareHeader                           	dd	?	
+addr_waveInUnprepareHeader                           	dq	?	
 
 align 16
-addr_waveOutBreakLoop                                	dd	?	
+addr_waveOutBreakLoop                                	dq	?	
 
 align 16
-addr_waveOutClose                                    	dd	?	
+addr_waveOutClose                                    	dq	?	
 
 align 16
-addr_waveOutGetDevCapsA                              	dd	?	
+addr_waveOutGetDevCapsA                              	dq	?	
 
 align 16
-addr_waveOutGetDevCapsW                              	dd	?	
+addr_waveOutGetDevCapsW                              	dq	?	
 
 align 16
-addr_waveOutGetErrorTextA                            	dd	?	
+addr_waveOutGetErrorTextA                            	dq	?	
 
 align 16
-addr_waveOutGetErrorTextW                            	dd	?	
+addr_waveOutGetErrorTextW                            	dq	?	
 
 align 16
-addr_waveOutGetID                                    	dd	?	
+addr_waveOutGetID                                    	dq	?	
 
 align 16
-addr_waveOutGetNumDevs                               	dd	?	
+addr_waveOutGetNumDevs                               	dq	?	
 
 align 16
-addr_waveOutGetPitch                                 	dd	?	
+addr_waveOutGetPitch                                 	dq	?	
 
 align 16
-addr_waveOutGetPlaybackRate                          	dd	?	
+addr_waveOutGetPlaybackRate                          	dq	?	
 
 align 16
-addr_waveOutGetPosition                              	dd	?	
+addr_waveOutGetPosition                              	dq	?	
 
 align 16
-addr_waveOutGetVolume                                	dd	?	
+addr_waveOutGetVolume                                	dq	?	
 
 align 16
-addr_waveOutMessage                                  	dd	?	
+addr_waveOutMessage                                  	dq	?	
 
 align 16
-addr_waveOutOpen                                     	dd	?	
+addr_waveOutOpen                                     	dq	?	
 
 align 16
-addr_waveOutPause                                    	dd	?	
+addr_waveOutPause                                    	dq	?	
 
 align 16
-addr_waveOutPrepareHeader                            	dd	?	
+addr_waveOutPrepareHeader                            	dq	?	
 
 align 16
-addr_waveOutReset                                    	dd	?	
+addr_waveOutReset                                    	dq	?	
 
 align 16
-addr_waveOutRestart                                  	dd	?	
+addr_waveOutRestart                                  	dq	?	
 
 align 16
-addr_waveOutSetPitch                                 	dd	?	
+addr_waveOutSetPitch                                 	dq	?	
 
 align 16
-addr_waveOutSetPlaybackRate                          	dd	?	
+addr_waveOutSetPlaybackRate                          	dq	?	
 
 align 16
-addr_waveOutSetVolume                                	dd	?	
+addr_waveOutSetVolume                                	dq	?	
 
 align 16
-addr_waveOutUnprepareHeader                          	dd	?	
+addr_waveOutUnprepareHeader                          	dq	?	
 
 align 16
-addr_waveOutWrite                                    	dd	?	
+addr_waveOutWrite                                    	dq	?	
+
+align 16
+addr_DLLNAME  rb 512
+align 16
+addr_SYSPATH rb 512
+align 16
+addr_FULLNAME rb 512
 
 align 16
 section '.edata' export data readable
@@ -2822,6 +2858,7 @@ export 'version.dll', \
     jmp_waveOutSetVolume,                                	'waveOutSetVolume',\
     jmp_waveOutUnprepareHeader,                          	'waveOutUnprepareHeader',\
     jmp_waveOutWrite,                                    	'waveOutWrite'
+
 
 
 section '.reloc' fixups data readable discardable
