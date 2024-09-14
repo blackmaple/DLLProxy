@@ -1,5 +1,7 @@
 format PE64 GUI 6.0 DLL
 include 'win64wx.inc'
+entry DllEntryPoint
+entry equ main
 
 macro LoadApi api,handle,name,address
 {
@@ -9,8 +11,10 @@ macro LoadApi api,handle,name,address
     mov qword [address],rax
 }
 
+
+
 align 16
-.code
+section '.text' code readable executable
 
 
 align 16
@@ -314,7 +318,7 @@ LoadOrigExports:
 
 align 16
 DllEntryPoint:
-    sub rsp,0x20
+    sub rsp,0x28
 
         .if rdx   =   1     
         
